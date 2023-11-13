@@ -1,86 +1,71 @@
 package com.modulo.usuarios.infraestructure.services.impl;
 
-import com.modulo.usuarios.api.models.response.MailResponseDTO;
+import com.modulo.usuarios.api.models.request.MailRequestDTO;
 import com.modulo.usuarios.infraestructure.services.contracts.MailService;
 import com.modulo.usuarios.utils.enums.MailsEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
 public class MailServiceImpl implements MailService {
 
     private final JavaMailSender javaMailSender;
+    private final String envioMailgun;
 
     @Autowired
-    public MailServiceImpl(JavaMailSender javaMailSender) {
+    public MailServiceImpl(JavaMailSender javaMailSender, @Value("${spring.mail.username}") String envioMailgun) {
         this.javaMailSender = javaMailSender;
+        this.envioMailgun = envioMailgun;
     }
 
-    // TODO -> todo esto es mockiado conun solo mail, habria q hacer luego par una lista de mails
-    @Override
-    public void enviarMail(MailResponseDTO mailResponseDTO) {
-        enviarCorreo(mailResponseDTO);
-    }
-
-    private void enviarCorreo(MailResponseDTO mailResponseDTO) {
-        log.info("comienza el DTO");
-        SimpleMailMessage mensaje = new SimpleMailMessage();
-        mensaje.setFrom("postmaster@sandbox4d1de417bd0348f3896185ff80da0369.mailgun.org");
-        mensaje.setTo(mailResponseDTO.getDestinatarios());
-        mensaje.setSubject(MailsEnum.ASUNTO.getValue());
-        mensaje.setText(MailsEnum.MENSAJE.getValue());
-
-        javaMailSender.send(mensaje);
-    }
-
-/*    private final RestTemplate restTemplate;  // RestTemplate para hacer solicitudes HTTP
-    private final String apiExternaUrl;  // URL de la API externa
-
-    @Autowired
-    public MailServiceImpl(JavaMailSender javaMailSender, RestTemplate restTemplate, @Value("${api.externa.url}") String apiExternaUrl) {
-        this.javaMailSender = javaMailSender;
-        this.restTemplate = restTemplate;
-        this.apiExternaUrl = apiExternaUrl;
-    }
 
     @Override
-    public void enviarMail(MailResponseDTO mailResponseDTO) {
-        List<String> destinatarios = obtenerDestinatariosDesdeApiExterna();
-        mailResponseDTO.setDestinatarios(destinatarios);
-        enviarCorreo(mailResponseDTO);
-    }
+    public void enviarMail(MailRequestDTO mailRequestDTO) {
+        log.info("----> Comienza seteo de mail");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(envioMailgun);
 
-    private List<String> obtenerDestinatariosDesdeApiExterna() {
-        ResponseEntity<List<String>> response = restTemplate.exchange(
-                apiExternaUrl + "/destinatarios",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<String>>() {
-                });
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return response.getBody();
+        // Verificar si hay correos electrónicos en el DTO
+        List<String> emails = mailRequestDTO.getDestinatarios();
+        log.info("Destinatarios: {}", emails);
+        if (emails != null && !emails.isEmpty()) {
+            // Si hay más de un correo electrónico
+            if (emails.size() > 1) {
+                // Convertir la lista de correos electrónicos a un array de Strings
+                String[] emailsArray = emails.toArray(new String[0]);
+                message.setTo(emailsArray);
+            } else {
+                // Si solo hay un correo electrónico
+                message.setTo(emails.get(0));
+            }
         } else {
-            // Manejar el error o lanzar una excepción según tu necesidad
-            return Collections.emptyList();
+            // Si no hay correos electrónicos
+            throw new RuntimeException("La lista de correos electrónicos está vacía en el DTO.");
         }
+        message.setSubject(MailsEnum.ASUNTO.getValue());
+        message.setText(MailsEnum.MENSAJE.getValue());
+
+        log.info("----> llamado a javaMailSender");
+        javaMailSender.send(message);
     }
-
-    private void enviarCorreo(MailResponseDTO mailResponseDTO) {
-        SimpleMailMessage mensaje = new SimpleMailMessage();
-        mensaje.setFrom("postmaster@sandbox4d1de417bd0348f3896185ff80da0369.mailgun.org");
-        mensaje.setTo(mailResponseDTO.getDestinatarios().toArray(new String[0]));
-        mensaje.setTo(mailResponseDTO.getDestinatarios().toArray(new String[0]));
-        mensaje.setSubject(MailsEnum.ASUNTO.getValue());
-        mensaje.setText(MailsEnum.MENSAJE.getValue());
-
-        javaMailSender.send(mensaje);
-    }*/
-
-
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
