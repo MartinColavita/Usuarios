@@ -1,9 +1,9 @@
 package com.modulo.usuarios.infraestructure.services.contracts;
 
 
-import com.modulo.usuarios.api.models.response.MailResponseDTO;
+import com.modulo.usuarios.api.models.request.MailRequestDTO;
 
 public interface MailService {
-    void enviarMail(MailResponseDTO mailResponseDTO);
+   void enviarMail(MailRequestDTO mailRequestDTO);
 
 }

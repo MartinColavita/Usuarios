@@ -37,7 +37,28 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 			<version>3.1.5</version>
 		</dependency>
-	</dependencies>
+		<!-- Swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>6.0.13</version>
+        </dependency>
+		<!-- Dependencia para Spring Data JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.23</version> <!-- La versión puede variar, asegúrate de usar la versión correcta -->
+		</dependency>
+    </dependencies>
 	<build>
 		<plugins>
 			<plugin>

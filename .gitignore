@@ -15,12 +15,11 @@ target/
 
 ### IntelliJ IDEA ###
 .idea/
+src/main/resources/application.properties
 *.iws
 *.ipr
 *.iml
 out/
-target/
-
 # Maven
 target/
 

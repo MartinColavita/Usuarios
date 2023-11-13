@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/telefonos")
 public class TelefnosUtilesController {
 
-
     @GetMapping("/")
     public List<ListaTelefnosResponseDTO> telefonosUtiles(){
         return setData();
@@ -28,8 +27,5 @@ public class TelefnosUtilesController {
                 new ListaTelefnosResponseDTO(TelefonosEnum.EMERGENCIAS.getDescripcion(), TelefonosEnum.EMERGENCIAS.getNumero()) );
         return dataL;
     }
-
-
-
 
 }

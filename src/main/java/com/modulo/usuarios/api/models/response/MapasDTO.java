@@ -4,17 +4,18 @@ package com.modulo.usuarios.api.models.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MapasMockDTO {
-    private String descripcion;
-    private String latitud;
-    private String longitud;
-    private int cantDeas;
-    private String mail;
+public class MapasDTO {
+    private Double latitude;
+    private Double longitude;
+    private String name;
+    private Long id;
+    private List<String> emails;
 
 }
 
