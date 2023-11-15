@@ -12,6 +12,6 @@ import java.util.List;
 @Builder
 @Data
 public class MailRequestDTO implements Serializable {
-    private List<String> destinatarios;
+    private String destinatarios;
 
 }

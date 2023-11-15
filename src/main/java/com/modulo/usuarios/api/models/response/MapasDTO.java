@@ -15,7 +15,7 @@ public class MapasDTO {
     private Double longitude;
     private String name;
     private Long id;
-    private List<String> emails;
+    private String emails;
 
 }
 

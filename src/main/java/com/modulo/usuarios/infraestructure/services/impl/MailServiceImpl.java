@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
+
 
 @Slf4j
 @Service
@@ -25,7 +27,7 @@ public class MailServiceImpl implements MailService {
         this.envioMailgun = envioMailgun;
     }
 
-
+    @CrossOrigin(value = "*")
     @Override
     public void enviarMail(MailRequestDTO mailRequestDTO) {
         log.info("----> Comienza seteo de mail");
@@ -33,20 +35,11 @@ public class MailServiceImpl implements MailService {
         message.setFrom(envioMailgun);
 
         // Verificar si hay correos electrónicos en el DTO
-        List<String> emails = mailRequestDTO.getDestinatarios();
+        var emails = mailRequestDTO.getDestinatarios();
         log.info("Destinatarios: {}", emails);
-        if (emails != null && !emails.isEmpty()) {
-            // Si hay más de un correo electrónico
-            if (emails.size() > 1) {
-                // Convertir la lista de correos electrónicos a un array de Strings
-                String[] emailsArray = emails.toArray(new String[0]);
-                message.setTo(emailsArray);
-            } else {
-                // Si solo hay un correo electrónico
-                message.setTo(emails.get(0));
-            }
+        if (emails != null) {
+            message.setTo(mailRequestDTO.getDestinatarios());
         } else {
-            // Si no hay correos electrónicos
             throw new RuntimeException("La lista de correos electrónicos está vacía en el DTO.");
         }
         message.setSubject(MailsEnum.ASUNTO.getValue());
